@@ -108,6 +108,11 @@ class Scan(object):
             self.paths["role"] = os.path.join(self.roles_path, key)
             self.paths["meta"] = os.path.join(self.paths["role"], "meta",
                                               "main.yml")
+            self.paths["ansigenome"] = os.path.join(
+                self.paths["role"],
+                "meta",
+                "ansigenome.yml"
+            )
             self.paths["readme"] = os.path.join(self.paths["role"],
                                                 "README.{0}"
                                                 .format(self.readme_format))
@@ -342,6 +347,10 @@ class Scan(object):
         """
         if os.path.exists(self.paths["meta"]):
             self.meta_dict = utils.yaml_load(self.paths["meta"])
+            if not self.meta_dict:
+                self.meta_dict = {}
+            if os.path.exists(self.paths["ansigenome"]):
+                self.meta_dict['ansigenome_info'] = utils.yaml_load(self.paths["ansigenome"])['ansigenome_info']
         else:
             self.report["state"]["missing_meta_role"] += 1
             self.report["roles"][role]["state"] = "missing_meta"
